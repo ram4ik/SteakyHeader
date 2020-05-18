@@ -9,8 +9,38 @@
 import SwiftUI
 
 struct ContentView: View {
+    
+    @ObservedObject var viewModel = ContentViewModel()
+    
+    var genderSegmentedControl: some View {
+        Picker("", selection: self.$viewModel.selectedSegment) {
+            Text("Male").tag(Gender.male.rawValue)
+            Text("Female").tag(Gender.female.rawValue)
+        }
+        .pickerStyle(SegmentedPickerStyle())
+    }
+    
     var body: some View {
-        Text("Hello, World!")
+            List {
+                HStack {
+                    Spacer()
+                    Text("Marvel Universe").font(Font.system(size: 44.0))
+                    Spacer()
+                }
+                Section(header: genderSegmentedControl) {
+                    ForEach(viewModel.characters) { character in
+                        VStack {
+                            Spacer()
+                            Text(character.name)
+                            Spacer()
+                        }
+                    }
+                }
+        }
+    }
+    
+    func sectionChange(_ tag: Int) {
+        print("Gender Changed!")
     }
 }
 
